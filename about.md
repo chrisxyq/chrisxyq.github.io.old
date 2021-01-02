@@ -5,11 +5,9 @@ title: 关于我
 
 ### 徐源岐
 
-从事JAVA软件开发，个人微信公众号：CodInPro
+JAVA软件开发，个人微信公众号：CodInPro
 
-![](http://qmayg341y.hn-bkt.clouddn.com/FhPsg5MXEIsCJEN13XjTcQAErw5H)
-
-留言或评论请使用 [Github Issues](https://github.com/chrisxyq/chrisxyq.github.io/Issues)。
+![](http://qmayg341y.hn-bkt.clouddn.com/Fm-nHWPHYybVVTVsebhNWm2Ra0HX)
 
 ### 论文
 
