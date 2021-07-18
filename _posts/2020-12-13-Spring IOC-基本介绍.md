@@ -1,3 +1,11 @@
+---
+layout: post
+title: Spring IOC-基本介绍
+catalog: true
+tags:
+    - Spring IOC
+---
+
 # Spring ioc引入示例：解除类之间的耦合
 
 ## 编写JDBC的工程代码

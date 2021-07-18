@@ -1,6 +1,6 @@
 ---
 layout: post
-title: SpringBootRestfulCRUD实验
+title: SpringBoot-CRUD
 catalog: true
 tags:
     - SpringBoot

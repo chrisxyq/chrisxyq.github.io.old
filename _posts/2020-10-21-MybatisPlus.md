@@ -1,11 +1,11 @@
 ---
 layout: post
-title: MybatisPlus
+title: MyBatisPlus
 catalog: true
 tags:
-    - MybatisPlus
+    - MyBatisPlus
 ---
-## MybatisPlus使用示例
+## MyBatisPlus使用示例
 
 类似jpa(Java Persistence API)Java持久化API
 

@@ -3,7 +3,7 @@ layout: post
 title: jsp、cookie和session
 catalog: true
 tags:
-    - Javaweb
+    - JavaWeb
 ---
 # 10.jsp：代替servlet回传html页面的数据
 ![image-20210103154342842](https://gitee.com/chrisxyq/picgo/raw/master/img/1600154147868.png)
