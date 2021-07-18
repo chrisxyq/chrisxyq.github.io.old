@@ -3,7 +3,7 @@ layout: post
 title: SpringSecurity
 catalog: true
 tags:
-    - 中间件
+    - Spring AOP
 ---
 基于aop的拦截器和安全框架
 

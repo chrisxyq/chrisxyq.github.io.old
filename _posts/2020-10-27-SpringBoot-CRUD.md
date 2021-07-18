@@ -3,7 +3,7 @@ layout: post
 title: SpringBootRestfulCRUD实验
 catalog: true
 tags:
-    - Springboot
+    - SpringBoot
 ---
 thymeleaf语法：
 

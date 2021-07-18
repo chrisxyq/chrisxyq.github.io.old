@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Springboot
+title: SpringBoot基本使用
 catalog: true
 tags:
-    - Springboot
+    - SpringBoot
 ---
 ## 1.Springboot配置
 
