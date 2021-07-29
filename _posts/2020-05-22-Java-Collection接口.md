@@ -121,11 +121,53 @@ collections工具类有个方法叫synchronizedlist，把arraylist对象作为�
 
 
 
+### **使用迭代器遍历、并且使用迭代器的删除方法(remove()) 删除是正确可行的，也是开发中推荐使用的。**
+
+误区：
+
+如果将上例中的iterator.remove(); 改为list.remove(student);将会报ConcurrentModificationException异常。
+
+这是因为：使用迭代器遍历，却使用集合的方法删除元素的结果。
+
+### **负载因子为什么0.75**
+
+负载因子是0.75的时候，空间利用率比较高，而且避免了相当多的Hash冲突，使得底层的链表或者是红黑树的高度比较低，提升了空间效率。
+
+### **arraylist深浅拷贝**
+
+| 浅拷贝                           | Collections.copy(A,B)   ArrayList.clone()  ArrayList.addAll(list) |
+| -------------------------------- | ------------------------------------------------------------ |
+| 深拷贝                           | 继承Cloneable接口，同时必须实现clone()方法        @Override       public Student clone() {           return new Student(this.id, this.name);       }  ArrayList<Student> clonedList = new  ArrayList<>();           for (Student student : list) {              clonedList.add(student.clone());           } |
+| javabean   继承Serializable 接口 |                                                              |
 
 
 
+**list、map、set底层数据结构**
 
+|                                 |                                                              | 数据结构                                                     |
+| ------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| List有序,可重复                 | Arraylist                                                    | Object[]数组   默认长度为10，每次扩容1.5倍                   |
+| Vector                          | Object[]数组                                                 |                                                              |
+| LinkedList                      | 双向链表   默认长度为0，无扩容机制                           |                                                              |
+| Map                             | HashMap                                                      | 数组和链表或红黑树   迭代时不是插入顺序  HashMap  默认的初始化大小为 16。之后每次扩充，容量变为原来的 2  倍  当链表长度大于阈值（默认为 8）（将链表转换成红黑树前会判断，如果当前数组的长度小于 64，那么会选择先进行数组扩容，而不是转换为红黑树）时，将链表转化为红黑树，以减少搜索时间 |
+| LinkedHashMap（继承自 HashMap） | 数组和链表或红黑树+双向链表   维护了一个贯穿所有元素的双向链表，保证按插入顺序迭代 |                                                              |
+| Hashtable                       | 数组+链表                                                    |                                                              |
+| TreeMap                         | 红黑树（自平衡的排序二叉树）   实现SortMap接口让 TreeMap 有了对集合中的元素根据键排序的能力。默认是按 key 的升序排序  按树的中序遍历就能得到一个按 键-key 大小排序的序列  相比于HashMap来说 TreeMap 主要多了对集合中的元素根据键排序的能力以及对集合内元素的搜索的能力。 |                                                              |
+| Set无序，唯一                   | HashSet（无序，唯一）                                        | 基于 HashMap 实现   无序性是指存储的数据在底层数组中并非按照数组索引的顺序添加 ，而是根据数据的哈希值决定的 |
+| LinkedHashSet（继承自 HashSet） | 通过 LinkedHashMap 来实现的                                  |                                                              |
+| TreeSet（有序，唯一）           | 红黑树(自平衡的排序二叉树)                                   |                                                              |
 
+**HashMap数组长度为何是2的n次方**
+
+HashMap 通过 key 的 hashCode 经过扰动函数处理过后得到 hash 值，Hash 值的范围值大概 40 亿的映射空间，所以这个散列值是不能直接拿来用的。用之前还要先做对数组的长度取模运算，即通过 (n - 1) & hash 判断当前元素存放的位置（这里的 n 指的是数组的长度）
+
+hash%length==hash&(length-1)的前提是 length 是 2 的 n 次方
+
+**HashMap 多线程操作导致死循环问题**
+
+主要原因在于并发下的 Rehash 会造成元素之间会形成一个循环链表。不过，jdk 1.8 后解决了这个问题
+
+重哈希的主要是一个重新计算原HashMap中的元素在新table数组中的位置并进行复制处理的过程
 
 
 

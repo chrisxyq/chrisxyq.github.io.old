@@ -136,3 +136,12 @@ string类有一个final类型的属性为一个string[]数组，string类的值�
 ![image-20210123231537332](https://gitee.com/chrisxyq/picgo/raw/master/img/image-20210123231537332.png)
 
 ![image-20210123232154262](https://gitee.com/chrisxyq/picgo/raw/master/img/image-20210123232154262.png)
+
+**1.String StringBuffer 和 StringBuilder 的区别是什么?**
+
+| String                     | StringBuffer                                                 | StringBuilder            |
+| -------------------------- | ------------------------------------------------------------ | ------------------------ |
+| private final char value[] | private char value[]                                         | private char value[]     |
+| 线程安全                   | 线程安全   对方法加了synchronized同步锁                      | 线程不安全               |
+|                            | 对StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用 | 10%~15% 左右的性能提升   |
+|                            | 初始容量16   扩容：2倍+2                                     | 初始容量16   扩容：2倍+2 |
