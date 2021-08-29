@@ -3,11 +3,11 @@ layout: page
 title: 关于我 
 ---
 
-### 徐源岐
+### chrisxyq
 
 JAVA软件开发，个人微信公众号：CodInPro
 
-![](http://qmayg341y.hn-bkt.clouddn.com/Fm-nHWPHYybVVTVsebhNWm2Ra0HX)
+![](https://gitee.com/chrisxyq/picgo/raw/master/https://gitee.com/chrisxyq/qrcode_for_gh_9dacab5b2e50_258%20(2).jpg)
 
 ### 论文
 
