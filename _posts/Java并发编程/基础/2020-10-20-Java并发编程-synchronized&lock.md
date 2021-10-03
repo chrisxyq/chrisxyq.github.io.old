@@ -9,63 +9,111 @@ tags:
 
 视频来源：https://www.bilibili.com/video/BV1Kw411Z7dF
 
-## 多线程编程步骤
+## 多线程卖票：syn&lock
 
-![image-20210721135039523](https://gitee.com/chrisxyq/picgo/raw/master/https://gitee.com/chrisxyq/image-20210721135039523.png)
+demo演示三个线程卖30张票
+
+### syn版本资源类ticket
+
+```java
+public class SynchronizedTicket {
+    private int number = 30;
+
+    public synchronized void sale() {
+        if (number > 0) {
+            System.out.println(Thread.currentThread().getName() + ":卖出：" + number-- + "剩下：" + number);
+        }
+    }
+}
+
+```
+
+### lock版本资源类ticket
+
+```java
+public class LockTicket {
+    private int number = 30;
+    Lock lock = new ReentrantLock();
+
+    public void sale() {
+        lock.lock();
+        try {
+            if (number > 0) {
+                System.out.println(Thread.currentThread().getName() + "\t卖出第：" + (number--) + "\t还剩下：" + number);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+```
+
+### 测试方法
+
+```java
+public class SaleTicketBySynchronized {
+    public static void main(String[] args) {
+        SynchronizedTicket ticket = new SynchronizedTicket();
+        //runnable方式创建线程
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 40; i++) {
+                    ticket.sale();
+                }
+            }
+        }, "aa").start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 40; i++) {
+                    ticket.sale();
+                }
+            }
+        }, "bb").start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 40; i++) {
+                    ticket.sale();
+                }
+            }
+        }, "cc").start();
+    }
+}
+```
+
+## synchronized和Lock的区别
+
+|      | synchronized                           | lock                          |
+| ---- | -------------------------------------- | ----------------------------- |
+|      | 有代码块锁和方法锁                     | lock是5.0新增的，只有代码块锁 |
+|      | 发生异常会自动释放锁，不会导致死锁现象 |                               |
+|      | 一直等待，不会中断                     | 可以中断                      |
+|      | 不可以                                 | 可以知道有没有成功获取锁      |
+|      |                                        | 线程竞争资源激烈时，效率较高  |
+
+
 
 注意：调用线程的start方法，不一定会立即创建该线程。线程的start方法底层调用了native的start0()方法，因此由操作系统决定
 
-基于以上情况，因此无法确定线程的执行顺序。若要实现线程间的通信，则需要第二步，在资源类指定操作方法
+基于以上情况，因此无法确定线程的执行顺序。
+
+若要实现（指定线程的执行顺序）线程间的通信，则需要在资源类的操作方法指定之（判断干活通知）
+
+## 线程通信demo：初始值为0的变量，一个线程+1，一个线程-1
 
 
 
 
 
-### 多线程卖票：syn&lock
-
-重票/错票示意
-
-![image-20210117235242040](https://gitee.com/chrisxyq/picgo/raw/master/img/image-20210117235242040.png)
-
-#### synchronized+同步监视器/锁
-
-![1590739017314](https://gitee.com/chrisxyq/picgo/raw/master/img/1590739017314.png)
-
-解决线程安全的方法是：线程同步
-
-当线程同步锁发生嵌套的时候：可能发生死锁
-
-方式1：使用同步代码块，需要显式的指定唯一的锁
-
-方式2：使用同步方法，不需要显示指定锁，默认将this当前对象作为锁
-
-继承thread类创建的线程，使用同步方法进行同步，需要将同步方法定义为static，且共享数据也应是static
-
-实现runnable接口创建的线程，使用同步方法进行同步，不需要将同步方法定义为static，且共享数据不需要是static
-
-#### Lock
-
-JDK5.0提供了Lock锁的方式实现同步
 
 
 
-![1596813967867](https://gitee.com/chrisxyq/picgo/raw/master/img/1596813967867.png)
 
-![1596814033948](https://gitee.com/chrisxyq/picgo/raw/master/img/1596814033948.png)
 
-![1596814077209](https://gitee.com/chrisxyq/picgo/raw/master/img/1596814077209.png)
-
-#### synchronized和Lock的区别
-
-首选lock，由于lock是5.0新增的，且更灵活
-
-其次用同步代码块，因为同步代码块在方法体内部才分配相应的资源
-
-最后才考虑用同步方法。
-
-![1596814458536](https://gitee.com/chrisxyq/picgo/raw/master/img/1596814458536.png)
-
-![1590747022340](https://gitee.com/chrisxyq/picgo/raw/master/img/1590747022340.png)
 
 ### 生产者消费者：线程通信
 

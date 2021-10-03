@@ -7,7 +7,51 @@ tags:
 ---
 视频来源：https://www.bilibili.com/video/BV1Kw411Z7dF
 
+## 一些面试题
 
+### wait和sleep的异同
+
+![1590752867761](https://gitee.com/chrisxyq/picgo/raw/master/img/1590752867761.png)
+
+|            | Sleep                                                        | Wait                                                         |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+|            | 线程类（Thread）的静态方法，只让出了CPU，但监控依然保持，<br /> |                                                              |
+| 是否释放锁 | 不会释放对象锁，也不需要占用锁                               | Object的方法，调用会放弃对象锁，进入等待队列，待调用notify()/notifyAll()唤醒指定的线程或者所有线程 |
+| 使用限制   | 可以在任何地方使用                                           | 只能在同步方法或同步块中使用   （notify/notifyAll和wait方法依赖于monitor对象，我们知道monitor 存在于对象头的Mark Word 中(存储monitor引用指针)，而synchronized关键字可以获取 monitor |
+| 用途       | sleep() 通常被用于暂停执行                                   | wait() 通常被用于线程间交互/通信   不会自动苏醒，需要别的线程调用同一个对象上的 notify() 或者 notifyAll() 方法  或使用 wait(long timeout) 超时后线程会自动苏醒 |
+
+### 守护线程demo
+
+设置aa为守护线程之前，程序不会结束
+
+```java
+    public static void main(String[] args) {
+        Thread aa = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + "::" + Thread.currentThread().isDaemon());
+            while (true) {
+
+            }
+        }, "aa");
+        aa.start();
+        System.out.println(Thread.currentThread().getName() + "结束");
+    }
+```
+
+设置aa为守护线程之后，程序结束
+
+```java
+    public static void main(String[] args) {
+        Thread aa = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + "::" + Thread.currentThread().isDaemon());
+            while (true) {
+
+            }
+        }, "aa");
+        aa.setDaemon(true);
+        aa.start();
+        System.out.println(Thread.currentThread().getName() + "结束");
+    }
+```
 
 **Java内存模型**
 
@@ -133,13 +177,7 @@ Thread的内部类State定义了线程的几种状态
 
 ![1590752697844](https://gitee.com/chrisxyq/picgo/raw/master/img/1590752697844.png)
 
-![1590752867761](https://gitee.com/chrisxyq/picgo/raw/master/img/1590752867761.png)
 
-|            | Sleep                                                        | Wait                                                         |
-| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 是否释放锁 | 线程类（Thread）的方法，只让出了CPU，但监控依然保持，不会释放对象锁 | Object的方法，调用会放弃对象锁，进入等待队列，待调用notify()/notifyAll()唤醒指定的线程或者所有线程 |
-| 使用限制   | 可以在任何地方使用                                           | 只能在同步方法或同步块中使用   （notify/notifyAll和wait方法依赖于monitor对象，我们知道monitor 存在于对象头的Mark Word 中(存储monitor引用指针)，而synchronized关键字可以获取 monitor |
-| 用途       | sleep() 通常被用于暂停执行                                   | wait() 通常被用于线程间交互/通信   不会自动苏醒，需要别的线程调用同一个对象上的 notify() 或者 notifyAll() 方法  或使用 wait(long timeout) 超时后线程会自动苏醒 |
 
 ## **在重写的run方法中，我们只能够进行异常的捕获而不能够抛出异常**
 
