@@ -103,45 +103,209 @@ public class SaleTicketBySynchronized {
 
 若要实现（指定线程的执行顺序）线程间的通信，则需要在资源类的操作方法指定之（判断干活通知）
 
-## 线程通信demo：初始值为0的变量，一个线程+1，一个线程-1
+## 线程通信demo：初始值为0的变量，多个线程交替+1，-1
 
-
-
-
-
-
-
-
-
-
-
-### 生产者消费者：线程通信
-
-#### syn+wait/notify
+### synchronized+wait+notify实现
 
 资源类
 
-![image-20210721140532312](https://gitee.com/chrisxyq/picgo/raw/master/https://gitee.com/chrisxyq/SYdgAzZ3Op4slEJ.png)
+```java
+public class Share {
+    private int number=0;
+    public synchronized void incr() throws InterruptedException {
+        //等待
+        if(number!=0){
+            this.wait();
+        }
+        //干活
+        number++;
+        System.out.println(Thread.currentThread().getName() + "::" + number);
+        //通知其他线程
+        this.notifyAll();
+    }
+    public synchronized void decr() throws InterruptedException {
+        //等待
+        if(number!=1){
+            this.wait();
+        }
+        //干活
+        number--;
+        System.out.println(Thread.currentThread().getName() + "::" + number);
+        //通知其他线程
+        this.notifyAll();
+    }
+}
+```
 
-测试类：启动两个线程
+demo
 
-![image-20210721140854168](https://gitee.com/chrisxyq/picgo/raw/master/https://gitee.com/chrisxyq/SYdgAzZ3Op4slEJ.png)
+```java
+public class IncrAndDecrTest {
+    /**
+     * 一个线程+1，一个线程-1
+     * 交替执行十次
+     */
+    public static void main(String[] args) {
+        Share share = new Share();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.incr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "aa").start();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.decr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "bb").start();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.incr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "cc").start();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.decr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "dd").start();
+    }
+```
 
-#### wait的虚假唤醒
 
-注意：若将以上两个线程扩充为四个线程，两个加1，两个减1，则不会得到想要的结果
 
-这是由于notifyAll方法不确定会唤醒哪个线程，举例线程1、3负责加1，线程2、4负责减去1
+### wait+notify虚假唤醒的原因&解决
 
-线程1执行后，唤醒线程3，线程3进行if判断后，执行wait进行等待。
+以上demo可能会出现如下情况：
 
-这时，若线程1重新执行，并再次唤醒线程3，则由于wait方法是哪里休息哪里唤醒
+```
+aa::1
+bb::0
+cc::1
+aa::2
+bb::1
+cc::2
+```
 
-因此线程3将执行加1操作
+原因cc线程抢到锁执行加1操作之后，aa线程抢到锁，判断当前数为1，因此aa线程执行到wait后在此处休眠
 
-因此资源类的判断逻辑应该使用while替代if，防止虚假唤醒
+cc又抢到线程锁，cc休眠
 
-（下飞机后还要再次安检、不可重入锁
+aa抢到线程锁，而wait是在哪休眠就在哪唤醒，因此aa线程得以继续往下执行+1操作
+
+解决：将if判断改成while，使得线程不满足while条件时才能继续往下执行，防止虚假唤醒现象（类似于下飞机之后再上飞机，依旧需要安检）
+
+### lock+await/signalAll实现（单个condition
+
+资源类：（注意方法不要再用synchronized修饰
+
+```java
+public class ShareByLock {
+    private int number = 0;
+    private Lock lock = new ReentrantLock();
+    private Condition condition =lock.newCondition();
+
+    public void incr() throws InterruptedException {
+        //上锁
+        lock.lock();
+        try{
+            //等待
+            while (number != 0) {
+                condition.await();
+            }
+            //干活
+            number++;
+            System.out.println(Thread.currentThread().getName() + "::" + number);
+            //通知其他线程
+            condition.signalAll();
+        }finally {
+            lock.unlock();
+        }
+    }
+
+    public void decr() throws InterruptedException {
+        //上锁
+        lock.lock();
+        try{
+            //等待
+            while (number != 1) {
+                condition.await();
+            }
+            //干活
+            number--;
+            System.out.println(Thread.currentThread().getName() + "::" + number);
+            //通知其他线程
+            condition.signalAll();
+        }finally {
+            lock.unlock();
+        }
+    }
+```
+
+demo
+
+```java
+public class IncrAndDecrByLockTest {
+    public static void main(String[] args) {
+        ShareByLock share = new ShareByLock();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.incr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "aa").start();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.decr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "bb").start();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.incr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "cc").start();
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    share.decr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "dd").start();
+    }
+```
+
+
+
+
+
+
 
 #### lock+await/signalAll（单个condition
 
