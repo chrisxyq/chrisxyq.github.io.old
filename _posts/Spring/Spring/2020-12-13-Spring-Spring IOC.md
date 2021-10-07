@@ -6,6 +6,153 @@ tags:
     - Spring
 ---
 
+## Spring IOC代码演示
+
+### pom文件
+
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.0.5.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+```
+
+### 依赖注入示例
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--    引入其他的配置文件-->
+    <import resource="applicationContext2.xml"></import>
+</beans>
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--    1.bean的xml配置的三种方法-->
+    <bean id="userDao" class="com.xyq.dao.impl.UserDaoImpl" scope="prototype">
+        <!--        bean的依赖注入：基本数据类型属性-->
+        <property name="username" value="zhangsan"></property>
+        <property name="age" value="18"></property>
+        <!--        list和map属性的注入很麻烦，不演示-->
+    </bean>
+    <!--    静态工厂-->
+    <!--    <bean id="userDao" class="com.xyq.factory.StaticFactory" factory-method="getUserDao"></bean>-->
+    <!--    工厂方法-->
+    <!--    <bean id="dynamicFactory" class="com.xyq.factory.DynamicFactory"></bean>-->
+    <!--    <bean id="userDao" factory-bean="dynamicFactory" factory-method="getUserDao">-->
+    <!--        -->
+    <!--    </bean>-->
+
+</beans>
+```
+
+#### 基本数据类型属性注入
+
+```xml
+    <bean id="userDao" class="com.xyq.dao.impl.UserDaoImpl" scope="prototype">
+        <!--        bean的依赖注入：基本数据类型属性-->
+        <property name="username" value="zhangsan"></property>
+        <property name="age" value="18"></property>
+        <!--        list和map属性的注入很麻烦，不演示-->
+    </bean>
+```
+
+#### 静态工厂注入
+
+```java
+public class StaticFactory {
+    public static UserDao getUserDao(){
+        return new UserDaoImpl();
+    }
+}
+```
+
+```xml
+    <!--    静态工厂-->
+    <!--    <bean id="userDao" class="com.xyq.factory.StaticFactory" factory-method="getUserDao"></bean>-->
+```
+
+#### 工厂方法注入
+
+```java
+public class DynamicFactory {
+    public UserDao getUserDao(){
+        return new UserDaoImpl();
+    }
+}
+```
+
+```xml
+    <!--    工厂方法-->
+    <!--    <bean id="dynamicFactory" class="com.xyq.factory.DynamicFactory"></bean>-->
+    <!--    <bean id="userDao" factory-bean="dynamicFactory" factory-method="getUserDao">-->
+    <!--        -->
+```
+
+#### 有参构造方法/set注入
+
+```xml
+    <!--    2.bean的依赖注入:有参构造方法/set注入-->
+    <bean id="userService" class="com.xyq.service.UserService">
+        <!--        set注入 name为属性名 ref为引用的bean的id-->
+        <!--        <property name="userDao" ref="userDao"></property>-->
+        <!--        有参构造方法 name为构造方法参数名 ref为引用的bean的id-->
+        <constructor-arg name="userDao" ref="userDao"></constructor-arg>
+    </bean>
+```
+
+```java
+public class UserService {
+    private UserDao userDao;
+
+    //有参构造方法注入
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    //set方法注入
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+}
+```
+
+
+
+### 测试类（获取上下文
+
+```java
+    @Test
+    public void testScope() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        UserDao userDao1 = (UserDao) context.getBean("userDao");
+        UserDao userDao2 = (UserDao) context.getBean("userDao");
+        System.out.println(userDao1);
+        System.out.println(userDao2);
+    }
+```
+
+## JdbcTemplate
+
+
+
+------------
+
 # Spring ioc引入示例：解除类之间的耦合
 
 ## 编写JDBC的工程代码
