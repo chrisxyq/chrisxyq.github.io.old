@@ -85,23 +85,7 @@ public class SaleTicketBySynchronized {
 }
 ```
 
-## synchronized和Lock的区别
 
-|      | synchronized                           | lock                          |
-| ---- | -------------------------------------- | ----------------------------- |
-|      | 有代码块锁和方法锁                     | lock是5.0新增的，只有代码块锁 |
-|      | 发生异常会自动释放锁，不会导致死锁现象 |                               |
-|      | 一直等待，不会中断                     | 可以中断                      |
-|      | 不可以                                 | 可以知道有没有成功获取锁      |
-|      |                                        | 线程竞争资源激烈时，效率较高  |
-
-
-
-注意：调用线程的start方法，不一定会立即创建该线程。线程的start方法底层调用了native的start0()方法，因此由操作系统决定
-
-基于以上情况，因此无法确定线程的执行顺序。
-
-若要实现（指定线程的执行顺序）线程间的通信，则需要在资源类的操作方法指定之（判断干活通知）
 
 ## 线程通信demo：初始值为0的变量，多个线程交替+1，-1
 
@@ -303,17 +287,7 @@ public class IncrAndDecrByLockTest {
 
 
 
-
-
-
-
-#### lock+await/signalAll（单个condition
-
-资源类的方法
-
-![image-20210721145040806](https://gitee.com/chrisxyq/picgo/raw/master/https://gitee.com/chrisxyq/5CGM8ZY3BDfb7dx.png)
-
-### 线程定制化通信：轮流打印（绑定多个condition
+## 线程定制化通信：lock实现ABC线程轮流打印（绑定多个condition
 
 引言：之前的四个线程的例子，两个累加线程的先后顺序难以控制，因此需要定制化通信
 
@@ -321,17 +295,148 @@ public class IncrAndDecrByLockTest {
 
 资源类的打印方法
 
-![image-20210721151823250](https://gitee.com/chrisxyq/picgo/raw/master/https://gitee.com/chrisxyq/oYxHdgRnfCzqlui.png)
+```java
+class ShareData{
+    private int number = 1;//A:1,B:2,C:3
+    private Lock lock = new ReentrantLock();
+    private Condition c1 = lock.newCondition();
+    private Condition c2 = lock.newCondition();
+    private Condition c3 = lock.newCondition();
 
+    public void printc1(){
+        lock.lock();
+        try {
+            //1.判断
+            while (number != 1){
+                c1.await();
+            }
+            //2.number=1则干活
+            for (int i = 1; i <= 5; i++) {
+                System.out.println(Thread.currentThread().getName()+"\t"+i);
+            }
+            //3.通知
+            number = 2;
+            //通知第2个
+            c2.signal();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
+    public void printc2(){
+        lock.lock();
+        try {
+            //1.判断
+            while (number != 2){
+                c2.await();
+            }
+            //2.number=2则干活
+            for (int i = 1; i <= 10; i++) {
+                System.out.println(Thread.currentThread().getName()+"\t"+i);
+            }
+            //3.通知
+            number = 3;
+            //如何通知第3个
+            c3.signal();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
+    public void printc3(){
+        lock.lock();
+        try {
+            //1.判断
+            while (number != 3){
+                c3.await();
+            }
+            //2.number=3则干活
+            for (int i = 1; i <= 15; i++) {
+                System.out.println(Thread.currentThread().getName()+"\t"+i);
+            }
+            //3.通知
+            number = 1;
+            //如何通知第1个
+            c1.signal();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+```
 
+demo
 
+```java
+public class SequentPrintByLock {
+    public static void main(String[] args) {
+        ShareData shareData = new ShareData();
+        new Thread(()->{
+            for (int i = 1; i <= 10; i++) {
+                shareData.printc1();
+            }
+        },"A").start();
+        new Thread(()->{
+            for (int i = 1; i <= 10; i++) {
+                shareData.printc2();
+            }
+        },"B").start();
+        new Thread(()->{
+            for (int i = 1; i <= 10; i++) {
+                shareData.printc3();
+            }
+        },"C").start();
+    }
 
+```
 
+## 可重入锁示例
 
+synchronized和lock都是可重入锁
 
-1.wait和sleep的区别
+```java
+public class ReentrantLockDemo {
+    public static void main(String[] args) {
+        Object o = new Object();
+        new Thread(()->{
+            synchronized (o){
+                System.out.println(Thread.currentThread().getName() + "外层");
+                synchronized (o){
+                    System.out.println(Thread.currentThread().getName() + "外层");
+                    synchronized (o){
+                        System.out.println(Thread.currentThread().getName() + "外层");
+                    }
+                }
+            }
+        });
+    }
+}
+```
 
-![1601466686292](https://gitee.com/chrisxyq/picgo/raw/master/img/1601466686292.png)
+使用lock时候，一定要手动释放锁。否则可能导致后面的代码无法运行。因为前面的锁不释放，后面的代码无法获取线程锁
+
+## 面试题
+
+### synchronized和Lock的区别
+
+|              | synchronized                           | lock                                                     |
+| ------------ | -------------------------------------- | -------------------------------------------------------- |
+|              | 关键字，存在于 JVM 层面                | 接口                                                     |
+|              | 有代码块锁和方法锁                     | lock是5.0新增的，只有代码块锁                            |
+| 锁的释放条件 | 发生异常会自动释放锁，不会导致死锁现象 | Lock 必须在 finally 关键字中释放锁，不然容易造成线程死锁 |
+|              | 一直等待，不会中断                     | 可以中断                                                 |
+|              | 不可以                                 | 可以知道有没有成功获取锁                                 |
+|              |                                        | 线程竞争资源激烈时，效率较高                             |
+
+注意：调用线程的start方法，不一定会立即创建该线程。线程的start方法底层调用了native的start0()方法，因此由操作系统决定
+
+基于以上情况，因此无法确定线程的执行顺序。
+
+若要实现（指定线程的执行顺序）线程间的通信，则需要在资源类的操作方法指定之（判断干活通知）
 
 ### **Lock锁是怎么实现的，notify会唤醒哪个线程**
 
@@ -361,12 +466,14 @@ synchronized 关键字和 volatile 关键字是两个互补的存在，而不是
 | 修饰 | 变量                                                   | 修饰方法以及代码块                                 |
 | 作用 | 解决变量在多个线程之间的可见性，但不能保证数据的原子性 | 解决的是多个线程之间访问资源的同步性，两者都能保证 |
 
-### **Synchronized和lock对比**
+### synchronized修饰代码块和修饰普通方法的区别
 
-|              | Synchronized                                                 | lock                                                        |
-| ------------ | ------------------------------------------------------------ | ----------------------------------------------------------- |
-| 存在层面     | 关键字，存在于 JVM 层面                                      | 接口                                                        |
-| 锁的类型     |                                                              | 可公平锁                                                    |
-| 锁的获取:    |                                                              | Lock 中有尝试获取锁的方法，如果尝试获取到锁，则不用一直等待 |
-| 锁的释放条件 | 1. 获取锁的线程执行完同步代码后，自动释放；   2. 线程发生异常时，JVM会让线程释放锁 | Lock 必须在 finally 关键字中释放锁，不然容易造成线程死锁    |
-| 锁的性能     | 资源竞争很激烈的情况下，Synchronized的性能会下降几十倍       | Lock 锁适用于大量同步阶段                                   |
+synchronized修饰代码块锁的是synchronized的括号里面的对象
+
+**synchronized锁升级机制**
+
+| 偏向锁   | 无竞争的时候sync使用偏向锁                                   |
+| -------- | ------------------------------------------------------------ |
+| 轻量级锁 | 偏向锁失败了（一个对象被不同的线程加锁了），就会升级为轻量级锁 |
+| 重量级锁 | 有线程的竞争，就升级为重量级锁   轻量级锁替换失败到达一定次数（默认为10）后，轻量级锁升级为重量级锁。  需要注意，如果线程2自旋期间，有线程3也需要访问同步方法，则立刻由轻量级锁膨胀为重量级锁 |
+
