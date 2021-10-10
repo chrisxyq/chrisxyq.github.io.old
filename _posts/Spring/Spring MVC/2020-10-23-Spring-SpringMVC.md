@@ -112,7 +112,7 @@ public class HelloController {
 
 
 
-## 请求&响应
+## 请求
 
 ### 封装请求参数到实体类
 
@@ -209,9 +209,194 @@ public class AnnoController {
     }
 ```
 
-
-
 ### @PathVariable
+
+```jsp
+<a href="/anno/testPathVariable/1">PathVariable</a><br/>
+```
+
+```java
+    @RequestMapping("/testPathVariable/{sid}")
+    public String testPathVariable(@PathVariable(name="sid") String id){
+        System.out.println(id);
+        return "success";
+    }
+```
+
+### @sessionAttributes：用于控制器多次执行方法间的参数共享（只能作用于类上）
+
+spring mvc提供了Model：类似于servlet原生api：HttpServletRequest.setAttribute()
+
+```jsp
+<a href="/anno/testSessionAttributes">putSessionAttributes</a><br/>
+<a href="/anno/getSessionAttributes">getSessionAttributes</a><br/>
+<a href="/anno/delSessionAttributes">delSessionAttributes</a><br/>
+```
+
+```java
+@Controller
+@RequestMapping("/anno")
+@SessionAttributes(value = {"msg"})
+public class AnnoController {
+  
+    @RequestMapping("/testSessionAttributes")
+    public String testSessionAttributes(Model model){
+        //底层存储到request域对象
+        model.addAttribute("msg","美美");
+        return "success";
+    }
+    @RequestMapping("/getSessionAttributes")
+    public String getSessionAttributes(ModelMap modelMap){
+        System.out.println(modelMap.get("msg"));
+        return "success";
+    }
+    @RequestMapping("/delSessionAttributes")
+    public String delSessionAttributes(SessionStatus sessionStatus){
+        sessionStatus.setComplete();
+        return "success";
+    }
+```
+
+页面可以回显设置的attribute
+
+```jsp
+<body>
+${requestScope.msg}
+${sessionScope}
+</body>
+```
+
+## 响应数据和结果视图
+
+### 返回值类型：字符串
+
+```jsp
+<a href="/user/testString">testString</a><br/>
+```
+
+```java
+@RequestMapping("/user")
+@Controller
+public class UserController {
+    @RequestMapping("/testString")
+    public String testString(Model model){
+        model.addAttribute("user",new User("uname","18"));
+        return "responseSuccess";
+    }
+```
+
+```jsp
+<body>
+${user.uname}
+${user.age}
+</body>
+```
+
+### 返回值类型：空
+
+可以servlet的方式转发/重定向、或直接输出字符串回显
+
+```java
+    @RequestMapping("/testVoid")
+    public void testVoid(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.getRequestDispatcher("WEB-INF/pages/success.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().print("hello");
+        return;
+    }
+```
+
+### springmvc方式转发/重定向
+
+```java
+    @RequestMapping("/testForwardAndRedirect")
+    public String testForwardAndRedirect(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        return "forward:/WEB-INF/pages/success.jsp";
+//        return "redirect:/WEB-INF/pages/success.jsp";
+        return "redirect:index.jsp";
+    }
+```
+
+### 返回ModelAndView
+
+```java
+    @RequestMapping("/testModelAndView")
+    public ModelAndView testModelAndView() throws Exception {
+        ModelAndView modelAndView = new ModelAndView();
+        //相当于model.addAttribute("user", new User("uname", "18"));
+        //把user对象存储到request中，底层存储到request域对象
+        modelAndView.addObject("user", new User("modelAndView", "18"));
+        modelAndView.setViewName("responseSuccess");
+        return modelAndView;
+    }
+```
+
+### 接收ajax请求响应json数据
+
+```jsp
+    <script type="text/javascript"src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+    <script>
+        $(function () {
+            $("#btn").click(function () {
+                // alert("hello btn");
+                $.ajax({
+                    url:"user/testAjax",
+                    contentType:"application/json;charset=UTF-8",
+                    data:'{"username":"hehe","password":"123","age":"30"}',
+                    dataType:"json",
+                    type:"post",
+                    success:function (data) {
+                        alert(data);
+                        alert(data.uname);
+                        
+                    }
+                })
+            })
+        })
+    </script>
+```
+
+```java
+    @RequestMapping("/testAjax")
+    public @ResponseBody User testAjax(@RequestBody User user) {
+        user.setAge("40");
+        user.setUname("tom");
+        System.out.println(user);
+        return user;
+    }
+```
+
+报错
+
+```java
+//前端
+Failed to load resource: the server responded with a status of 415 ()
+//后端
+springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver.handleHttpMessageNotReadable Failed to read HTTP message: org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public entity.User controller.UserController.testAjax(entity.User)
+
+```
+
+导入依赖
+
+```xml
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.9.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.9.0</version>
+    </dependency>
+```
 
 
 
