@@ -1,6 +1,6 @@
 ---
 layout: post
-title: synchronized&lock
+title: Java并发编程-synchronized&lock
 catalog: true
 tags:
     - Java并发编程

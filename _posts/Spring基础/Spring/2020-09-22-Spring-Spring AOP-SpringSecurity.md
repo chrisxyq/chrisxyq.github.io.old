@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Spring AOP-SpringSecurity
+title: Spring-AOP SpringSecurity
 catalog: true
 tags:
     - Spring

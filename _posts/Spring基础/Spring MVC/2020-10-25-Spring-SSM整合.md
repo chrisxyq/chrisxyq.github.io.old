@@ -1,6 +1,6 @@
 ---
 layout: post
-title: SSM整合
+title: Spring-SSM整合
 catalog: true
 tags:
     - Spring

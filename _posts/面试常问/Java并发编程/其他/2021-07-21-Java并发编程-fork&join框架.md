@@ -1,6 +1,6 @@
 ---
 layout: post
-title: fork&join框架
+title: Java并发编程-fork&join框架
 catalog: true
 tags:
     - Java并发编程

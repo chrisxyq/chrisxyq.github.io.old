@@ -1,6 +1,6 @@
 ---
 layout: post
-title: MyBatis基本使用&缓存
+title: ORM框架-MyBatis基本使用&缓存
 catalog: true
 tags:
     - ORM框架

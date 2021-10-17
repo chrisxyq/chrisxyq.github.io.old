@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Spring Cache
+title: Spring-Spring Cache
 catalog: true
 tags:
     - Spring

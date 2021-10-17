@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Stream&vavr
+title: Java SE-Stream&vavr
 catalog: true
 tags:
     - Java SE

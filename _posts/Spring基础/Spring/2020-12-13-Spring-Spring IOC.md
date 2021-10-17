@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Spring IOC
+title: Spring-IOC
 catalog: true
 tags:
     - Spring

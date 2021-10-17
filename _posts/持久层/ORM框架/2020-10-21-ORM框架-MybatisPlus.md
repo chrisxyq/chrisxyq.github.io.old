@@ -1,6 +1,6 @@
 ---
 layout: post
-title: MyBatisPlus
+title: ORM框架-MyBatisPlus
 catalog: true
 tags:
     - ORM框架

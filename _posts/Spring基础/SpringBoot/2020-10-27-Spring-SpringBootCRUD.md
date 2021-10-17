@@ -1,6 +1,6 @@
 ---
 layout: post
-title: SpringBoot-CRUD
+title: Spring-SpringBoot CRUD
 catalog: true
 tags:
     - Spring

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: SpringMVC
+title: Spring-SpringMVC
 catalog: true
 tags:
     - Spring

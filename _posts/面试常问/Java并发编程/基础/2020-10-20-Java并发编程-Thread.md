@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Thread
+title: Java并发编程-Thread
 catalog: true
 tags:
     - Java并发编程

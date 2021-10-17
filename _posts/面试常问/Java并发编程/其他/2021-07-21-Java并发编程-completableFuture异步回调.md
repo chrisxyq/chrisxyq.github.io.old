@@ -1,6 +1,6 @@
 ---
 layout: post
-title: completableFuture异步回调
+title: Java并发编程-completableFuture异步回调
 catalog: true
 tags:
     - Java并发编程

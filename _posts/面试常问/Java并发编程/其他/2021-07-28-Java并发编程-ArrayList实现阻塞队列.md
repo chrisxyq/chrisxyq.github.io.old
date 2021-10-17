@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ArrayList实现阻塞队列
+title: Java并发编程-ArrayList实现阻塞队列
 catalog: true
 tags:
     - Java并发编程
