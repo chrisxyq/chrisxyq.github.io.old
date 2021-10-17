@@ -444,5 +444,20 @@ public class StringToDateConverter implements Converter<String, Date> {
 
 ## 文件上传
 
+pom依赖：
+
+```xml
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+```
+
+
+
 ## 拦截器
 
