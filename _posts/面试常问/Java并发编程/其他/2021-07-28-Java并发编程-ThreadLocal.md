@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Java并发编程-ThreadLocal
+date:  2022-10-10
 catalog: true
 tags:
     - Java并发编程

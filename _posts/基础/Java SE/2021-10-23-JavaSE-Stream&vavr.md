@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Java SE-Stream&vavr
+date:  2021-10-01
 catalog: true
 tags:
     - Java SE
