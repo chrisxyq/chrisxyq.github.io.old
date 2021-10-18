@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Spring-IOC
+date:  2022-10-10
 catalog: true
 tags:
     - Spring

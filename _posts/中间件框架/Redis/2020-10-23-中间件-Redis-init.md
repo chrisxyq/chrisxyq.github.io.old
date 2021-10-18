@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 中间件-Redis-init
+date:  2022-10-10
 catalog: true
 tags:
     - Redis
