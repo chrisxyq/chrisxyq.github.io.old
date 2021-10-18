@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Spring-Spring Cache
+title: Spring-SpringCache
 date:  2022-10-10
 catalog: true
 tags:
