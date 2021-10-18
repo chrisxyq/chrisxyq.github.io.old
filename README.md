@@ -1,19 +1,3 @@
-持久层：熟悉MySQL、ORM框架、分库分表、分布式事务
-
-Web基础：Java Web上传下载
-
-Spring基础：Spring事务、拦截器
-
-中间件：熟悉Redis、ElasticSearch、消息队列、配置中心、监控日志平台（CAT、ELK）原理及应用
-
-微服务：熟悉Dubbo、GRPC、Spring Cloud
-
-通信基础：HTTP、NIO、Netty应用
-
-应用问题：单点登录、分布式锁、延迟任务、各种日志框架对比
-
-其他：Java并发编程、JVM、算法、设计模式
-
 近期：
 
 spring集成redis
@@ -21,6 +5,8 @@ spring集成redis
 Dubbo
 
 spring集成mq
+
+------------
 
 实践：
 
@@ -44,6 +30,8 @@ Spring基础实践：自定义异常、编程式事务、抽象类controller
 
 5.搜集Java并发编程及更多场景，如何在个人项目和公司项目应用的一些案例
 
+----------
+
 思考：
 
 学习MySQL原理，输出总结blog
@@ -55,3 +43,21 @@ Spring基础实践：自定义异常、编程式事务、抽象类controller
 2.搜集Java并发编程在个人项目和公司项目应用的一些案例
 
 3.中间件如何应用于个人项目，如何在公司项目应用的
+
+-------
+
+持久层：熟悉MySQL、ORM框架、分库分表、分布式事务
+
+Web基础：Java Web上传下载
+
+Spring基础：Spring事务、拦截器
+
+中间件：熟悉Redis、ElasticSearch、消息队列、配置中心、监控日志平台（CAT、ELK）原理及应用
+
+微服务：熟悉Dubbo、GRPC、Spring Cloud
+
+通信基础：HTTP、NIO、Netty应用
+
+应用问题：单点登录、分布式锁、延迟任务、各种日志框架对比
+
+其他：Java并发编程、JVM、算法、设计模式
