@@ -1,62 +1,63 @@
+近期：
 
-[leopard](https://leopardpan.cn) 是一个简洁的博客模板，响应式主题， 适配了电脑、手机各种屏幕，看效果直接点击下面链接
- 
- * [博客链接](https://leopardpan.cn) （部署在国内，访问更快）         
- * [Demo链接](https://leopardpan.github.io/) （部署在github page）         
+spring集成redis
 
-如果你喜欢请 Star ，你的 Star 是我持续更新的动力, 谢谢 😄.
- 
-### 你在搭建个人博客遇到任何问题都可以找我
+Dubbo
 
-遇到解决不了的问题 [需要技术支持联系我](https://leopardpan.cn/support/)
+spring集成mq
 
+------------
 
-### 环境要求
+实践：
 
-* Jekyll 支持: Mac 、Windows、ubuntu 、Linux 操作系统                     
-* Jekyll 需要依赖: Ruby、bundler
+1.消融项目：
 
-### 使用手册
+mybatisplus、
 
-[Jekyll搭建个人博客](https://leopardpan.cn/2016/10/jekyll_tutorials1/)  :  使用Jekyll搭建个人博客的教程，及如何把这个博客模板修改成你自己的博客，里面也有大量的评论、Jekyll 搭建博客各种环境出现过的问题。
+Java Web实践：excel上传下载实践：如上传导入病例数据，下载得到规划结果
 
-[HEXO搭建个人博客](https://leopardpan.cn/2015/08/HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/) : 使用 HEXO 基于 Github Page 搭建个人博客， 教程里面累计了大量提问和评论，如果你在搭建博客时遇到问题，可以看看这个教程。 
+Spring基础实践：自定义异常、编程式事务、抽象类controller
 
+设计模式实践、并发编程（fork join 线程池实践）
 
-#### 安装Jekyll
+微服务框架实践：java服务内用dubbo、跨语言调用用grpc
 
-[Jekyll中文官方文档](http://jekyll.bootcss.com/) ， 如果你已经安装过了 Jekyll，可以忽略此处。
+2.自己实现spring
 
-> $ gem install jekyll
+3.通信项目（类似聊天室、NIO、Netty应用
 
-#### 获取博客模板
+4.一些场景集成到公司项目中，如分库分表、分布式事务、单点登录、分布式锁、延迟任务
 
-> $ git clone https://github.com/leopardpan/leopardpan.github.io.git
+5.搜集Java并发编程及更多场景，如何在个人项目和公司项目应用的一些案例
 
-或者直接[下载博客](https://github.com/leopardpan/leopardpan.github.io/archive/master.zip)   
+----------
 
-进leopardpan.github.io/ 目录下， 开启本地服务 
+思考：
 
-> $ jekyll server
+学习MySQL原理，输出总结blog
+搜分库分表、分布式事务视频，看看有没有demo
+学习中间件：熟悉Redis、ElasticSearch、消息队列、配置中心、监控日志平台（CAT、ELK）输出博客
+学习通信基础：HTTP、NIO、Netty应用、输出博客
+1.搜集应用问题：单点登录、分布式锁、延迟任务、实践&输出博客
 
-在浏览器输入 [127.0.0.1:4000](127.0.0.1:4000) ， 就可以看到博客效果了。
+2.搜集Java并发编程在个人项目和公司项目应用的一些案例
 
+3.中间件如何应用于个人项目，如何在公司项目应用的
 
-### 提示
+-------
 
->* 如果你想使用我的模板，请把 _posts/ 目录下的文章都去掉。
->* 修改 _config.yml 文件里面的内容为你自己的个人信息。
+持久层：熟悉MySQL、ORM框架、分库分表、分布式事务
 
-如果在部署博客的时候发现问题，可以直接在[Issues](https://github.com/leopardpan/leopardpan.github.io/issues)里面提问。        
+Web基础：Java Web上传下载
 
+Spring基础：Spring事务、拦截器
 
-### 把这个博客变成你自己的博客
+中间件：熟悉Redis、ElasticSearch、消息队列、配置中心、监控日志平台（CAT、ELK）原理及应用
 
-根据上面【提示】修改过后，在你的github里创建一个username.github.io的仓库，username指的值你的github的用户名。      
-创建完成后，把我的这个模板使用git push到你的username.github.io仓库下就行了。
-搭建博客如果遇到问题可以看看我教程[Jekyll搭建个人博客](https://leopardpan.cn/2016/10/jekyll_tutorials1/)。
+微服务：熟悉Dubbo、GRPC、Spring Cloud
 
+通信基础：HTTP、NIO、Netty应用
 
-#### 感谢   
+应用问题：单点登录、分布式锁、延迟任务、各种日志框架对比
 
-本博客在[Vno Jekyll](https://github.com/onevcat/vno-jekyll)基础上修改的。  
+其他：Java并发编程、JVM、算法、设计模式
