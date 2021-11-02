@@ -4,7 +4,7 @@ title: Spring-SpringBoot CRUD
 date:  2022-10-10
 catalog: true
 tags:
-    - Spring
+    - SpringBoot
 ---
 thymeleaf语法：
 

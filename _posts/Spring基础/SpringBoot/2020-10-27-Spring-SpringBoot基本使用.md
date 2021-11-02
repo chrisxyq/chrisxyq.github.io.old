@@ -4,9 +4,9 @@ title: Spring-SpringBoot基本使用
 date:  2022-10-10
 catalog: true
 tags:
-    - Spring
+    - SpringBoot
 ---
-## 1.Springboot配置
+## 1.SpringBoot配置
 
 ### 1.热部署配置：勾选
 
